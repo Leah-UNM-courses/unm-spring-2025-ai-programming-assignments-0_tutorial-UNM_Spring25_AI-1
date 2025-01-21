@@ -18,7 +18,7 @@ jobs:
       uses: classroom-resources/autograding-io-grader@v1
       with:
         test-name: Q1
-        setup-command: cd 0_tutorial
+        setup-command: ''
         command: python autograder.py -q q1
         input: ''
         expected-output: |-
@@ -41,8 +41,8 @@ jobs:
       uses: classroom-resources/autograding-io-grader@v1
       with:
         test-name: Q2
-        setup-command: cd 0_tutorial
-        command: python autograder.py -q q2
+        setup-command: ''
+        command: cd 0_tutorial && python autograder.py -q q2
         input: ''
         expected-output: "*** PASS: test_cases/q2/food_price1.test\n*** \tbuyLotsOfFruit
           correctly computes the cost of the order\n*** PASS: test_cases/q2/food_price2.test\n***
@@ -58,8 +58,8 @@ jobs:
       uses: classroom-resources/autograding-io-grader@v1
       with:
         test-name: Q3
-        setup-command: cd 0_tutorial
-        command: python autograder.py -q q3
+        setup-command: ''
+        command: cd 0_tutorial && python autograder.py -q q3
         input: ''
         expected-output: "Question q3\n===========\n\nWelcome to shop1 fruit shop\nWelcome
           to shop2 fruit shop\n*** PASS: test_cases/q3/select_shop1.test\n*** \tshopSmart(order,
@@ -72,11 +72,31 @@ jobs:
         comparison-method: contains
         timeout: 10
         max-score: 20
+    - name: All tests
+      id: all-tests
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: All tests
+        setup-command: ''
+        command: cd 0_tutorial && python autograder.py
+        input: ''
+        expected-output: |-
+          Provisional grades
+          ==================
+          Question q1: 1/1
+          Question q2: 1/1
+          Question q3: 1/1
+          ------------------
+          Total: 3/3
+        comparison-method: contains
+        timeout: 1
+        max-score: 10
     - name: Autograding Reporter
       uses: classroom-resources/autograding-grading-reporter@v1
       env:
         Q1_RESULTS: "${{steps.q1.outputs.result}}"
         Q2_RESULTS: "${{steps.q2.outputs.result}}"
         Q3_RESULTS: "${{steps.q3.outputs.result}}"
+        ALL-TESTS_RESULTS: "${{steps.all-tests.outputs.result}}"
       with:
-        runners: q1,q2,q3
+        runners: q1,q2,q3,all-tests
